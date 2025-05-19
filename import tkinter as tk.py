@@ -153,3 +153,29 @@ btn_remover = tk.Button(frame_remover, text="Remover Cena", command=remover_cena
 btn_remover.grid(row=0, column=2, padx=10)
 
 janela.mainloop()
+
+import openai
+import requests
+
+openai.api_key = "SUA_CHAVE_DE_API_AQUI"  # Substitua pela sua chave
+
+def gerar_imagem_ia(descricao, nome_arquivo):
+    try:
+        print("Gerando imagem com IA...")
+        resposta = openai.Image.create(
+            prompt=descricao,
+            n=1,
+            size="512x512"
+        )
+        url_imagem = resposta['data'][0]['url']
+        
+        # Baixa a imagem e salva localmente
+        img_data = requests.get(url_imagem).content
+        with open(nome_arquivo, 'wb') as handler:
+            handler.write(img_data)
+        
+        print("Imagem gerada com sucesso:", nome_arquivo)
+        return nome_arquivo
+    except Exception as e:
+        print("Erro ao gerar imagem:", e)
+        return None
